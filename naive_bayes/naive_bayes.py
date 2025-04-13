@@ -43,42 +43,44 @@ def is_message_nice(message):
     probability_of_mean_message *= prior_probability_of_mean_message
 
     if probability_of_nice_message > probability_of_mean_message:
-        return True
+        return True, probability_of_nice_message, probability_of_mean_message
     else:
-        return False
+        return False, probability_of_nice_message, probability_of_mean_message
     
 if __name__ == "__main__":
-    user_wants_to_test= input("Do you want to test the model? (y/n): ")
-    if user_wants_to_test.lower() == "y":
-        user_message = input("Enter a message: ")
-        result = is_message_nice(user_message)
-        if result == True:
-            print("The message is nice.")
-        else:
-            print("The message is mean.")
-    else:
-        print("Testing the model with test_nice_messages.txt")
-        with open("test_nice_messages.txt", "r") as file:
-            test_messages = [line.strip() for line in file.readlines()]
-        percent_correct = 0
-        for i in range(len(test_messages)):
-            message = test_messages[i]
-            result = is_message_nice(message)
+    while True:
+        user_wants_to_test= input("Do you want to test the model? (y/n): ")
+        if user_wants_to_test.lower() == "y":
+            user_message = input("Enter a message: ")
+            result = is_message_nice(user_message)
+            is_mean = result[0]
             if result == True:
-                percent_correct += 1
-        percent_correct = percent_correct / len(test_messages) * 100
-        rounded_percent_correct = round(percent_correct, 2)
-        print(f"Percent correct: {rounded_percent_correct}%")
+                print(f"The message is nice. With a probability of {result[1]:.2f} for being nice and {result[2]:.2f} for being mean.")
+            else:
+                print(f"The message is mean. with a probability of {result[1]:.2f} for being nice and {result[2]:.2f} for being mean.")
+        else:
+            print("Testing the model with test_nice_messages.txt")
+            with open("test_nice_messages.txt", "r") as file:
+                test_messages = [line.strip() for line in file.readlines()]
+            percent_correct = 0
+            for i in range(len(test_messages)):
+                message = test_messages[i]
+                result = is_message_nice(message)
+                if result == True:
+                    percent_correct += 1
+            percent_correct = percent_correct / len(test_messages) * 100
+            rounded_percent_correct = round(percent_correct, 2)
+            print(f"Percent correct: {rounded_percent_correct}%")
 
-        print("Testing the model with test_mean_messages.txt")
-        with open("test_mean_messages.txt", "r") as file:
-            test_messages = [line.strip() for line in file.readlines()]
-        percent_correct = 0
-        for i in range(len(test_messages)):
-            message = test_messages[i]
-            result = is_message_nice(message)
-            if result == False:
-                percent_correct += 1
-        percent_correct = percent_correct / len(test_messages) * 100
-        rounded_percent_correct = round(percent_correct, 2)
-        print(f"Percent correct: {rounded_percent_correct}%")
+            print("Testing the model with test_mean_messages.txt")
+            with open("test_mean_messages.txt", "r") as file:
+                test_messages = [line.strip() for line in file.readlines()]
+            percent_correct = 0
+            for i in range(len(test_messages)):
+                message = test_messages[i]
+                result = is_message_nice(message)
+                if result == False:
+                    percent_correct += 1
+            percent_correct = percent_correct / len(test_messages) * 100
+            rounded_percent_correct = round(percent_correct, 2)
+            print(f"Percent correct: {rounded_percent_correct}%")
